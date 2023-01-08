@@ -1,0 +1,86 @@
+{
+	"common": {
+		"name": "steam",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "Steam",
+		"titleLang": {
+			"en": "Steam",
+			"de": "Dampf",
+			"ru": "Стим",
+			"pt": "Vapor",
+			"nl": "Stoom",
+			"fr": "Fumer",
+			"it": "Vapore",
+			"es": "Vapor",
+			"pl": "Parowy",
+			"zh-cn": "蒸汽"
+		},
+		"desc": {
+			"en": "Retrieve various informations for a user from steam",
+			"de": "Rufen Sie verschiedene Informationen für einen Benutzer von Steam ab",
+			"ru": "Получить различную информацию о пользователе из Steam",
+			"pt": "Recupere várias informações para um usuário do Steam",
+			"nl": "Haal verschillende informatie voor een gebruiker op uit Steam",
+			"fr": "Récupérer diverses informations pour un utilisateur depuis steam",
+			"it": "Recupera varie informazioni per un utente da Steam",
+			"es": "Recuperar varias informaciones para un usuario de Steam",
+			"pl": "Pobierz różne informacje dla użytkownika ze Steam",
+			"zh-cn": "从 Steam 中检索用户的各种信息"
+		},
+		"authors": [
+			"Johannes Rehle <johannes.rehle@googlemail.com>"
+		],
+		"keywords": [
+			"steam",
+			"games",
+			"play",
+			"data"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "steam.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/johannes2704/ioBroker.steam/main/admin/steam.png",
+		"readme": "https://github.com/johannes2704/ioBroker.steam/blob/main/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "misc-data",
+		"compact": true,
+		"connectionType": "cloud",
+		"dataSource": "poll",
+		"adminUI": {
+			"config": "json"
+		},
+		"dependencies": [
+			{
+				"js-controller": ">=3.3.22"
+			}
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=5.1.13"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": []
+}
