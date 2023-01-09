@@ -22,7 +22,7 @@ class Steam extends utils.Adapter {
 		this.on('ready', this.onReady.bind(this));
 		this.on('unload', this.onUnload.bind(this));
 		this.on('objectChange', this.onObjectChange.bind(this));
-		this.requestClient = axios.create()
+		this.requestClient = axios.create();
 	}
 
 	async onReady()
@@ -67,20 +67,19 @@ class Steam extends utils.Adapter {
 			},
 			native: {},
 		});
-		
+
 		// main method
-		this.steamupdate()
+		this.steamupdate();
 	}
 
-  async steamupdate() {
-		let object;
+	async steamupdate() {
 		let gameid;
-		let gamename="";
-		let personastate = 0;
-		let status = "";
+		let gamename='';
+		let personastate =0;
+		let status = '';
 
 		await axios.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' +this.config.steamapikey + '&steamids='+this.config.userid)
-		  .then((response) => {
+			.then((response) => {
 				gameid=response.data.response.players[0].gameid;
 				personastate= response.data.response.players[0].personastate;
 				gamename=response.data.response.players[0].gameextrainfo;
@@ -91,28 +90,28 @@ class Steam extends utils.Adapter {
 
 		if (gameid)
 		{
-			status = "playing";
+			status = 'playing';
 		}
 		else
 		{
 			switch(personastate)
 			{
-				case 0:	status = "offline"; break;
-				case 1: status = "online"; break;
-				case 2: status = "playing"; break;
-				case 3: status = "away"; break;
-				case 4: status = "snooze"; break;
-				default: status = "unrecognized";
+				case 0:	status = 'offline'; break;
+				case 1: status = 'online'; break;
+				case 2: status = 'playing'; break;
+				case 3: status = 'away'; break;
+				case 4: status = 'snooze'; break;
+				default: status = 'unrecognized';
 			}    
 		}
 
-		let lastStatus="unrecognized";
+		let lastStatus='unrecognized';
 		try {
-			let obj = await this.getStateAsync('Status');
+			const obj = await this.getStateAsync('Status');
 			// @ts-ignore
-			lastStatus=obj.val.toString()
+			lastStatus=obj.val.toString();
 		} catch (err) {
-			lastStatus="unrecognized"
+			lastStatus='unrecognized';
 		}
 		
 		if ((lastStatus) !== status)
@@ -130,18 +129,17 @@ class Steam extends utils.Adapter {
 				await this.setStateAsync('GameName', null, true);
 			}
 		}
-		
+
 		await this.log.info('Steamstatus ist aktuell: ' + status);
-		
+
 		this.setTimeout(() => this.steamupdate(),1000*this.config.interval);
 	}  	
 
 	onObjectChange(id, obj) {
-	 	if (obj) {
-	 		this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-	 	} 
-	 }
-	 
+		if (obj) {
+			this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
+		}
+	}
 
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
