@@ -10,10 +10,9 @@
 
 **Tests:** ![Test and Release](https://github.com/johannes2704/ioBroker.steam/workflows/Test%20and%20Release/badge.svg)
 
-## steam adapter for ioBroker
+## Steam adapter for ioBroker
 
 Retrieve various informations for a user from Steam.
-
 
 ### DISCLAIMER
 
@@ -27,7 +26,7 @@ You can check other adapters for examples or ask in the developer community. Usi
 -->
 
 ### **WORK IN PROGRESS**
-* (Johannes Rehle) initial release
+* (johannes2704) Initial Release
 
 ## License
 MIT License

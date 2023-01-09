@@ -130,7 +130,7 @@ class Steam extends utils.Adapter {
 			}
 		}
 
-		//await this.log.info('Current status: ' + status);
+		await this.log.debug('Current status: ' + status);
 
 		this.setTimeout(() => this.steamupdate(),1000*this.config.interval);
 	}

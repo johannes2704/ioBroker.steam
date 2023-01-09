@@ -83,5 +83,29 @@
 		"userid":""
 	},
 	"objects": [],
-	"instanceObjects": []
+	"instanceObjects": [
+	{
+		"_id": "info.connection",
+		"type": "state",
+		"common": {
+				"role": "indicator.connected",
+				"name": "If communication with circuit works",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+		},
+		"native": {}
+	},
+	{
+			"_id": "timecreated",
+			"type": "state",
+			"common": {
+				"name": "timecreated",
+				"type": "string",
+				"read":  true,
+				"write": false
+			}
+		}
+	]
 }
