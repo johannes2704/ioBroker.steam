@@ -78,8 +78,9 @@
 		]
 	},
 	"native": {
-		"option1": true,
-		"option2": "42"
+		"interval": 15,
+		"userid": "42",
+		"steamapikey": "" 
 	},
 	"objects": [],
 	"instanceObjects": []

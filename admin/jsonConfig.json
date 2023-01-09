@@ -1,15 +1,27 @@
 {
-	"i18n": true,
+	"i18n": false,
 	"type": "panel",
 	"items": {
-		"option1": {
-			"type": "checkbox",
-			"label": "option1",
+		"userid": {
+			"type": "text",
+			"label": "Steam User ID",
 			"newLine": true
 		},
-		"option2": {
+		"steamapikey": {
 			"type": "text",
-			"label": "option2",
+			"label": "Steam API Key",
+			"newLine": true,
+			"sm": 1
+		},
+		"interval": {
+			"type": "number",
+			"label": "interval in seconds",
+			"newLine": true,
+			"default":"15"
+		},
+		"interval2": {
+			"type": "number",
+			"label": "interval in seconds",
 			"newLine": true
 		}
 	}
