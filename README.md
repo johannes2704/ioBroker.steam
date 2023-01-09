@@ -14,11 +14,6 @@
 
 Retrieve various informations for a user from Steam.
 
-### DISCLAIMER
-
-Please make sure that you consider copyrights and trademarks when you use names or logos of a company and add a disclaimer to your README.
-You can check other adapters for examples or ask in the developer community. Using a name or logo of a company without permission may cause legal problems for you.
-
 ## Changelog
 <!--
 	Placeholder for the next version (at the beginning of the line):
