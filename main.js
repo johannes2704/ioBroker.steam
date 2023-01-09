@@ -7,7 +7,7 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-const axios = require("axios").default;
+const axios = require('axios').default;
 
 class Steam extends utils.Adapter {
 
@@ -27,10 +27,26 @@ class Steam extends utils.Adapter {
 	async onReady()
 	{
 		// Initialize your adapter here
-		const configinterval = this.config.interval
+
+
+		this.setState("info.connection", false, true);
+		const configinterval = this.config.interval;
 		this.log.info("Intervall:" + configinterval);
 		this.log.info(this.config.steamapikey)
-		this.updateInterval = null
+
+		await this.setObjectNotExistsAsync('Status', {
+			type: 'state',
+			common: {
+				name: 'Status',
+				type: 'boolean',
+				role: 'indicator',
+				read: true,
+				write: true,
+			},
+			native: {},
+		});
+		
+		// main method
 		this.steamupdate()
 	}
 
