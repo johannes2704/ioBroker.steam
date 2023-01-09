@@ -1,7 +1,5 @@
 {
-	"i18n": false,
 	"type": "panel",
-
 	"items": {
 		
 		"userid": {
@@ -21,12 +19,6 @@
 			"label": "interval in seconds",
 			"newLine": true,
 			"default":"15"
-		},
-
-		"interval2": {
-			"type": "number",
-			"label": "interval in milliseconds",
-			"newLine": true
 		}
 	}
 }

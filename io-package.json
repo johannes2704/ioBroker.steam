@@ -20,7 +20,7 @@
 		"enabled": true,
 		"extIcon": "https://raw.githubusercontent.com/johannes2704/ioBroker.steam/main/admin/steam.png",
 		"readme": "https://github.com/johannes2704/ioBroker.steam/blob/main/README.md",
-		"loglevel": "info",
+		"loglevel": "debug",
 		"mode": "daemon",
 		"type": "misc-data",
 		"compact": true,
@@ -41,56 +41,10 @@
 		]
 	},
 	"native": {
-		"userid": "",
 		"interval": 15,
-		"steamapikey": ""
+		"steamapikey": "",
+		"userid": "" 
 	},
 	"objects": [],
-	"instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": "Device or service connected",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "status",
-      "type": "state",
-      "common": {
-        "role": "state",
-        "name": "Status",
-        "type": "string",
-        "read": true,
-        "write": false
-      },
-      "native": {}
-    },
-		{
-      "_id": "game",
-      "type": "state",
-      "common": {
-        "role": "state",
-        "name": "Game",
-        "type": "string",
-        "read": true,
-        "write": false
-      },
-      "native": {}
-    }
-  ]
+	"instanceObjects": []
 }
