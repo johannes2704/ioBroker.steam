@@ -5,20 +5,23 @@
 		"userid": {
 			"type": "text",
 			"label": "Steam User ID",
-			"newLine": true
+			"newLine": true,
+			"md":2
 		},
 
 		"steamapikey": {
 			"type": "text",
 			"label": "Steam API Key",
-			"newLine": true
+			"newLine": true,
+			"md":6
 		},
 
 		"interval": {
 			"type": "number",
 			"label": "interval in seconds",
 			"newLine": true,
-			"default":"15"
+			"default":"15",
+			"md":2
 		}
 	}
 }

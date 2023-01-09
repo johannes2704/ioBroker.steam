@@ -21,27 +21,49 @@ class Steam extends utils.Adapter {
 		});
 		this.on('ready', this.onReady.bind(this));
 		this.on('unload', this.onUnload.bind(this));
+		this.on('objectChange', this.onObjectChange.bind(this));
 		this.requestClient = axios.create()
 	}
 
 	async onReady()
 	{
 		// Initialize your adapter here
-
-
-		this.setState("info.connection", false, true);
-		const configinterval = this.config.interval;
-		this.log.info("Intervall:" + configinterval);
-		this.log.info(this.config.steamapikey)
+		//this.setState("info.connection", false, true);
+		//this.log.info("Intervall:" + this.config.interval);
+		//this.log.info(this.config.steamapikey);
 
 		await this.setObjectNotExistsAsync('Status', {
 			type: 'state',
 			common: {
 				name: 'Status',
-				type: 'boolean',
-				role: 'indicator',
+				type: 'string',
+				role: 'text',
 				read: true,
-				write: true,
+				write: false,
+			},
+			native: {},
+		});
+
+		await this.setObjectNotExistsAsync('GameID', {
+			type: 'state',
+			common: {
+				name: 'GameID',
+				type: 'string',
+				role: 'text',
+				read: true,
+				write: false,
+			},
+			native: {},
+		});
+
+		await this.setObjectNotExistsAsync('GameName', {
+			type: 'state',
+			common: {
+				name: 'GameName',
+				type: 'string',
+				role: 'text',
+				read: true,
+				write: false,
 			},
 			native: {},
 		});
@@ -53,14 +75,15 @@ class Steam extends utils.Adapter {
   async steamupdate() {
 		let object;
 		let gameid;
+		let gamename="";
 		let personastate = 0;
 		let status = "";
-		let configinterval = this.config.interval
 
 		await axios.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' +this.config.steamapikey + '&steamids='+this.config.userid)
 		  .then((response) => {
-				gameid=response.data.response.players[0].gameid
-				personastate= response.data.response.players[0].personastate
+				gameid=response.data.response.players[0].gameid;
+				personastate= response.data.response.players[0].personastate;
+				gamename=response.data.response.players[0].gameextrainfo;
 			})
 			.catch(error => {
 				this.log.error(error);
@@ -82,17 +105,43 @@ class Steam extends utils.Adapter {
 				default: status = "unrecognized";
 			}    
 		}
+
+		let lastStatus="unrecognized";
+		try {
+			let obj = await this.getStateAsync('Status');
+			// @ts-ignore
+			lastStatus=obj.val.toString()
+		} catch (err) {
+			lastStatus="unrecognized"
+		}
 		
-		const lastStatus = await this.getStateAsync("Status");
-		if (lastStatus.val.toString() !== status.toString())
+		if ((lastStatus) !== status)
 		{
 			await this.log.info('Steamstatus ist aktuell: ' + status);
 			await this.setStateAsync('Status', status, true);
+			if (gameid)
+			{
+				await this.setStateAsync('GameID', gameid, true);
+				await this.setStateAsync('GameName', gamename, true);
+			}
+			else
+			{
+				await this.setStateAsync('GameID', null, true);
+				await this.setStateAsync('GameName', null, true);
+			}
 		}
+		
 		await this.log.info('Steamstatus ist aktuell: ' + status);
-		this.setTimeout(() => this.steamupdate(),15000);
+		
+		this.setTimeout(() => this.steamupdate(),1000*this.config.interval);
 	}  	
 
+	onObjectChange(id, obj) {
+	 	if (obj) {
+	 		this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
+	 	} 
+	 }
+	 
 
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
