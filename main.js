@@ -29,20 +29,10 @@ class Steam extends utils.Adapter {
 		this.requestClient = axios.create()
 	}
 
-	async onReady() {
-		
+	async onReady()
+	{
 		// Initialize your adapter here
 		const configinterval = this.config.interval
-		var interval = 0;
-		if (configinterval < 5) {
-      this.log.info("Set interval to minimum 5");
-      interval = 5;
-    }
-		else
-		{
-			interval = configinterval
-		}
-
 		this.log.info("Intervall:" + interval);
 		this.log.info(this.config.steamapikey)
 		this.updateInterval = null
@@ -108,7 +98,7 @@ class Steam extends utils.Adapter {
 		}
 		await this.log.info('Steamstatus ist aktuell: ' + status);
 		this.setTimeout(() => this.steamupdate(),15000);
-		this.log.info(configinterval)
+		this.log.info(configinterval.toString())
 	}  	
 
 
