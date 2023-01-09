@@ -102,7 +102,7 @@ class Steam extends utils.Adapter {
 				case 3: status = 'away'; break;
 				case 4: status = 'snooze'; break;
 				default: status = 'unrecognized';
-			}    
+			}
 		}
 
 		let lastStatus='unrecognized';
@@ -113,7 +113,7 @@ class Steam extends utils.Adapter {
 		} catch (err) {
 			lastStatus='unrecognized';
 		}
-		
+
 		if ((lastStatus) !== status)
 		{
 			await this.log.info('Steamstatus ist aktuell: ' + status);
@@ -133,7 +133,7 @@ class Steam extends utils.Adapter {
 		await this.log.info('Steamstatus ist aktuell: ' + status);
 
 		this.setTimeout(() => this.steamupdate(),1000*this.config.interval);
-	}  	
+	}
 
 	onObjectChange(id, obj) {
 		if (obj) {
