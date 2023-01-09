@@ -11,22 +11,17 @@
 		"data"
 	],
 	"expert": "no",
-	"features": [
-		"adapter"
-	],
+	"features": ["adapter"],
 	"adminFeatures": [],
 	"type": "misc-data",
 	"startMode": "daemon",
 	"connectionType": "cloud",
 	"dataSource": "poll",
-	"connectionIndicator": "no",
+	"connectionIndicator": "yes",
 	"language": "JavaScript",
 	"nodeVersion": "14",
 	"adminUi": "json",
-	"tools": [
-		"ESLint",
-		"type checking"
-	],
+	"tools": ["ESLint","type checking"],
 	"releaseScript": "yes",
 	"devServer": "yes",
 	"devServerPort": 8081,
@@ -40,6 +35,6 @@
 	"gitCommit": "no",
 	"defaultBranch": "main",
 	"license": "MIT License",
-	"dependabot": "yes",
+	"dependabot": "no",
 	"creatorVersion": "2.3.0"
 }

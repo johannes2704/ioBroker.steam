@@ -1,27 +1,31 @@
 {
 	"i18n": false,
 	"type": "panel",
+
 	"items": {
+		
 		"userid": {
 			"type": "text",
 			"label": "Steam User ID",
 			"newLine": true
 		},
+
 		"steamapikey": {
 			"type": "text",
 			"label": "Steam API Key",
-			"newLine": true,
-			"sm": 1
+			"newLine": true
 		},
+
 		"interval": {
 			"type": "number",
 			"label": "interval in seconds",
 			"newLine": true,
 			"default":"15"
 		},
+
 		"interval2": {
 			"type": "number",
-			"label": "interval in seconds",
+			"label": "interval in milliseconds",
 			"newLine": true
 		}
 	}

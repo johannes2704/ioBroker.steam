@@ -9,10 +9,6 @@
 const utils = require('@iobroker/adapter-core');
 const axios = require("axios").default;
 
-
-// Load your modules here, e.g.:
-// const fs = require("fs");
-
 class Steam extends utils.Adapter {
 
 	/**
@@ -24,7 +20,6 @@ class Steam extends utils.Adapter {
 			name: 'steam',
 		});
 		this.on('ready', this.onReady.bind(this));
-		this.on('stateChange', this.onStateChange.bind(this));
 		this.on('unload', this.onUnload.bind(this));
 		this.requestClient = axios.create()
 	}
@@ -33,7 +28,7 @@ class Steam extends utils.Adapter {
 	{
 		// Initialize your adapter here
 		const configinterval = this.config.interval
-		this.log.info("Intervall:" + interval);
+		this.log.info("Intervall:" + configinterval);
 		this.log.info(this.config.steamapikey)
 		this.updateInterval = null
 		this.steamupdate()
@@ -61,33 +56,15 @@ class Steam extends utils.Adapter {
 		}
 		else
 		{
-				//The user's current status. 0 - Offline, 1 - Online, 2 - Busy, 3 - Away, 4 - Snooze, 5 - looking to trade, 6 - looking to play
-				switch(personastate)
-				{
-						case 0:
-						status = "offline"
-						break;
-
-						case 1:
-
-						status = "online";
-						break;
-
-						case 2:
-						status = "playing";
-						break;
-
-						case 3:
-						status = "away";
-						break;
-
-						case 4:
-						status = "snooze";
-						break;
-
-						default:
-						status = "unrecognized";
-				}    
+			switch(personastate)
+			{
+				case 0:	status = "offline"; break;
+				case 1: status = "online"; break;
+				case 2: status = "playing"; break;
+				case 3: status = "away"; break;
+				case 4: status = "snooze"; break;
+				default: status = "unrecognized";
+			}    
 		}
 		
 		const lastStatus = await this.getStateAsync("Status");
@@ -98,7 +75,6 @@ class Steam extends utils.Adapter {
 		}
 		await this.log.info('Steamstatus ist aktuell: ' + status);
 		this.setTimeout(() => this.steamupdate(),15000);
-		this.log.info(configinterval.toString())
 	}  	
 
 
@@ -108,30 +84,9 @@ class Steam extends utils.Adapter {
 	 */
 	onUnload(callback) {
 		try {
-			// Here you must clear all timeouts or intervals that may still be active
-			// clearTimeout(timeout1);
-			// clearTimeout(timeout2);
-			// clearInterval(interval1);
-
 			callback();
 		} catch (e) {
 			callback();
-		}
-	}
-
-
-	/**
-	 * Is called if a subscribed state changes
-	 * @param {string} id
-	 * @param {ioBroker.State | null | undefined} state
-	 */
-	onStateChange(id, state) {
-		if (state) {
-			// The state was changed
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-		} else {
-			// The state was deleted
-			this.log.info(`state ${id} deleted`);
 		}
 	}
 }
