@@ -116,7 +116,7 @@ class Steam extends utils.Adapter {
 
 		if ((lastStatus) !== status)
 		{
-			await this.log.info('Steamstatus ist aktuell: ' + status);
+			await this.log.info('Current status: ' + status);
 			await this.setStateAsync('Status', status, true);
 			if (gameid)
 			{
@@ -130,7 +130,7 @@ class Steam extends utils.Adapter {
 			}
 		}
 
-		//await this.log.info('Steamstatus ist aktuell: ' + status);
+		//await this.log.info('Current status: ' + status);
 
 		this.setTimeout(() => this.steamupdate(),1000*this.config.interval);
 	}
