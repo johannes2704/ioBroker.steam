@@ -23,6 +23,7 @@ class Steam extends utils.Adapter {
 		this.on('unload', this.onUnload.bind(this));
 		this.on('objectChange', this.onObjectChange.bind(this));
 		this.requestClient = axios.create();
+		this.refreshStateTimeout = null;
 	}
 
 	async onReady()
@@ -60,14 +61,20 @@ class Steam extends utils.Adapter {
 		await this.setStateAsync('accountname', personaname, true);
 
 		// main method
-		this.steamupdate();
+		this.refreshState();
 	}
 
-	async steamupdate() {
+	async refreshState() {
+		let nextRefreshSec = 15;
 		let gameid;
 		let gamename='';
 		let personastate =0;
 		let status = '';
+
+		if(this.config.interval)
+		{
+			nextRefreshSec=this.config.interval;
+		}
 
 		await axios.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' +this.config.steamapikey + '&steamids='+this.config.userid)
 			.then((response) => {
@@ -121,9 +128,17 @@ class Steam extends utils.Adapter {
 			}
 		}
 
-		await this.log.debug('Current status: ' + status);
+		if (this.refreshStateTimeout) {
+			this.clearTimeout(this.refreshStateTimeout);
+		}
 
-		this.setTimeout(() => this.steamupdate(),1000*this.config.interval);
+		this.refreshStateTimeout = this.setTimeout(() => {
+			this.refreshStateTimeout = null;
+			this.refreshState();
+		}, nextRefreshSec * 1000);
+
+		await this.log.debug('Current status: ' + status);
+		this.log.debug(`refreshStateTimeout: re-created refresh timeout: id ${this.refreshStateTimeout}`);
 	}
 
 	onObjectChange(id, obj) {
@@ -139,7 +154,6 @@ class Steam extends utils.Adapter {
 	onUnload(callback) {
 		try {
 			callback();
-			this.clearTimeout(this);
 		} catch (e) {
 			callback();
 		}
