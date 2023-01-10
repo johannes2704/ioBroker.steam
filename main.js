@@ -54,18 +54,32 @@ class Steam extends utils.Adapter
 			},
 		});
 
+
+		this.refreshGlobalState();
+		this.refreshState();
+	}
+
+	async refreshGlobalState()
+	{
 		const SteamApiResponse = await this.SteamApiClient.get(`/ISteamUser/GetPlayerSummaries/v0002/?key=${this.config.steamapikey}&steamids=${this.config.userid}`);
 		this.log.debug(`SteamApiResponse ${SteamApiResponse.status}: ${JSON.stringify(SteamApiResponse.data)}`);
 
 		if (SteamApiResponse.status === 200) {
 			const steamInfo = SteamApiResponse.data.response.players[0];
+
+			//Convert from Unix Time to DateString
 			const accountcreated=new Date(steamInfo.timecreated * 1000);
+			const lastlogoff=new Date(steamInfo.timecreated * 1000);
 
 			await this.setStateAsync('accountcreated', accountcreated.toDateString(), true);
 			await this.setStateAsync('accountname', steamInfo.personaname, true);
+			await this.setStateAsync('profileurl',steamInfo.profileurl, true);
+			await this.setStateAsync('visibility',steamInfo.communityvisibilitystate, true);
+			await this.setStateAsync('profilstate',steamInfo.profilstate, true);
+			await this.setStateAsync('lastlogoff',lastlogoff.toDateString(), true);
+			await this.setStateAsync('commentpermission',steamInfo.commentpermission, true);
+			await this.setStateAsync('realname',steamInfo.realname, true);
 		}
-
-		this.refreshState();
 	}
 
 	async refreshState()
