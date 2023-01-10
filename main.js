@@ -27,6 +27,18 @@ class Steam extends utils.Adapter {
 
 	async onReady()
 	{
+		// check current configuration
+		if (!this.config.userid)
+		{
+			this.log.error('userid is empty - please check instance configuration of $(this.namespace)');
+			return;
+		}
+		if (!this.config.steamapikey)
+		{
+			this.log.error('steamapikey is empty - please check instance configuration of $(this.namespace');
+			return;
+		}
+
 		// Initialize your adapter here
 		this.setState('info.connection', false, true);
 		//this.log.info("Intervall:" + this.config.interval);
@@ -127,6 +139,7 @@ class Steam extends utils.Adapter {
 	onUnload(callback) {
 		try {
 			callback();
+			this.clearTimeout(this);
 		} catch (e) {
 			callback();
 		}
