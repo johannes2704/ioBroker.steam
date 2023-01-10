@@ -32,6 +32,18 @@ class Steam extends utils.Adapter {
 		//this.log.info("Intervall:" + this.config.interval);
 		//this.log.info(this.config.steamapikey);
 
+		let accountcreated='';
+
+		await axios.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' +this.config.steamapikey + '&steamids='+this.config.userid)
+			.then((response) => {
+				accountcreated=response.data.response.players[0].timecreated;
+			})
+			.catch(error => {
+				this.log.error(error);
+			});
+
+		await this.setStateAsync('accountcreated', accountcreated, true);
+
 		// main method
 		this.steamupdate();
 	}
@@ -84,13 +96,13 @@ class Steam extends utils.Adapter {
 			await this.setStateAsync('accountstatus', status, true);
 			if (gameid)
 			{
-				await this.setStateAsync('GameID', gameid, true);
-				await this.setStateAsync('GameName', gamename, true);
+				await this.setStateAsync('gameid', gameid, true);
+				await this.setStateAsync('gamename', gamename, true);
 			}
 			else
 			{
-				await this.setStateAsync('GameID', null, true);
-				await this.setStateAsync('GameName', null, true);
+				await this.setStateAsync('gameid', null, true);
+				await this.setStateAsync('gamename', null, true);
 			}
 		}
 
