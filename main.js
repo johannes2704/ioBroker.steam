@@ -10,12 +10,14 @@
 const utils = require('@iobroker/adapter-core');
 const axios = require('axios').default;
 
-class Steam extends utils.Adapter {
+class Steam extends utils.Adapter
+{
 
 	/**
 	 * @param {Partial<utils.AdapterOptions>} [options={}]
 	 */
-	constructor(options) {
+	constructor(options)
+	{
 		super({
 			...options,
 			name: 'steam',
@@ -26,7 +28,7 @@ class Steam extends utils.Adapter {
 		this.requestClient = axios.create();
 		this.SteamApiClient = null;
 		this.refreshStateTimeout = null;
-	}
+	} //end constructor
 
 	async onReady()
 	{
@@ -52,29 +54,23 @@ class Steam extends utils.Adapter {
 			},
 		});
 
-		let accountcreated=new Date();
-		let personaname='';
-
 		const SteamApiResponse = await this.SteamApiClient.get(`/ISteamUser/GetPlayerSummaries/v0002/?key=${this.config.steamapikey}&steamids=${this.config.userid}`);
 		this.log.debug(`SteamApiResponse ${SteamApiResponse.status}: ${JSON.stringify(SteamApiResponse.data)}`);
 
 		if (SteamApiResponse.status === 200) {
-			const steamInfo = SteamApiResponse.data;
-			accountcreated=new Date(steamInfo.response.players[0].timecreated * 1000);
-			personaname=steamInfo.response.players[0].personaname;
+			const steamInfo = SteamApiResponse.data.response.players[0];
+			const accountcreated=new Date(steamInfo.timecreated * 1000);
+
+			await this.setStateAsync('accountcreated', accountcreated.toDateString(), true);
+			await this.setStateAsync('accountname', steamInfo.personaname, true);
 		}
 
-		await this.setStateAsync('accountcreated', accountcreated.toDateString(), true);
-		await this.setStateAsync('accountname', personaname, true);
-
-		this.log.debug(accountcreated.toDateString());
-
-		// main method
 		this.refreshState();
 	}
 
-	async refreshState() {
-		let nextRefreshSec = 15;
+	async refreshState()
+	{
+		let nextRefreshSec = this.config.interval;
 		let status = '';
 
 		if(this.config.interval)
@@ -87,36 +83,30 @@ class Steam extends utils.Adapter {
 			const SteamApiResponse = await this.SteamApiClient.get(`/ISteamUser/GetPlayerSummaries/v0002/?key=${this.config.steamapikey}&steamids=${this.config.userid}`);
 
 			if (SteamApiResponse.status === 200) {
-				const steamInfo = SteamApiResponse.data;
-				const gameid=steamInfo.response.players[0].gameid;
-				const personastate= steamInfo.response.players[0].personastate;
-				const gamename=steamInfo.response.players[0].gameextrainfo;
+				const steamInfo = SteamApiResponse.data.response.players[0];
+				await this.setApiConnection(true);
 
-				if (steamInfo.response.players[0].gameid)
+				if (steamInfo.gameid)
 				{
 					status = 'playing';
 				}
 				else
 				{
-					status = this.getPersonaState(personastate);
+					status = this.getPersonaState(steamInfo.personastate);
 				}
 
 				let lastStatus='unrecognized';
-				try {
-					const obj = await this.getStateAsync('accountstatus');
-					lastStatus=obj.val.toString();
-				} catch (err) {
-					lastStatus='unrecognized';
-				}
+				const obj = await this.getStateAsync('accountstatus');
+				lastStatus=obj.val.toString();
 
 				if ((lastStatus) !== status)
 				{
 					this.log.info('Current status: ' + status);
 					await this.setStateAsync('accountstatus', status, true);
-					if (gameid)
+					if (steamInfo.gameid)
 					{
-						await this.setStateAsync('gameid', gameid, true);
-						await this.setStateAsync('gamename', gamename, true);
+						await this.setStateAsync('gameid', steamInfo.gameid, true);
+						await this.setStateAsync('gamename', steamInfo.gameextrainfo, true);
 					}
 					else
 					{
@@ -126,25 +116,33 @@ class Steam extends utils.Adapter {
 				}
 			}
 
-			if (this.refreshStateTimeout) {
+			if (this.refreshStateTimeout)
+			{
 				this.clearTimeout(this.refreshStateTimeout);
 			}
-		} catch (err) {
-			// Set device offline
+		}
+		catch (err)
+		{
 			await this.setApiConnection(false);
 
-			if (err.name === 'AxiosError') {
+			if (err.name === 'AxiosError')
+			{
 				this.log.error(`Request to ${err?.config?.url} failed with code ${err?.status} (${err?.code}): ${err.message}`);
 				this.log.debug(`Complete error object: ${JSON.stringify(err)}`);
-			} else {
+			}
+			else
+			{
 				this.log.error(err);
 			}
-		} finally {
-
-			this.refreshStateTimeout = this.setTimeout(() => {
+		}
+		finally
+		{
+			this.refreshStateTimeout = this.setTimeout(() =>
+			{
 				this.refreshStateTimeout = null;
 				this.refreshState();
-			}, nextRefreshSec * 1000);
+			},
+			nextRefreshSec * 1000);
 
 			await this.log.debug('Current status: ' + status);
 			this.log.debug('refreshStateTimeout: re-created refresh timeout: id ${this.refreshStateTimeout}');
