@@ -45,19 +45,23 @@ class Steam extends utils.Adapter {
 		//this.log.info("Intervall:" + this.config.interval);
 		//this.log.info(this.config.steamapikey);
 
-		let accountcreated='';
+		let accountcreated=new Date();
 		let personaname='';
 
 		await axios.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' +this.config.steamapikey + '&steamids='+this.config.userid)
 			.then((response) => {
-				accountcreated=response.data.response.players[0].timecreated.toString();
-				personaname=response.data.response.players[0].personaname;
+				if (response.status==200)
+				{
+					accountcreated=new Date(response.data.response.players[0].timecreated * 1000);
+					personaname=response.data.response.players[0].personaname;
+				}
+
 			})
 			.catch(error => {
 				this.log.error(error);
 			});
 
-		await this.setStateAsync('accountcreated', accountcreated, true);
+		await this.setStateAsync('accountcreated', accountcreated.getDate(), true);
 		await this.setStateAsync('accountname', personaname, true);
 
 		// main method
