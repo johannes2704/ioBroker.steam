@@ -98,21 +98,23 @@
 		"native": {}
 	},
 	{
-			"_id": "accountcreated",
+			"_id": "data.accountcreated",
 			"type": "state",
 			"common": {
 				"name": "Account created",
 				"type": "string",
+				"role": "text",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "gameid",
+			"_id": "data.gameid",
 			"type": "state",
 			"common": {
 				"name": "ID of the currently playing game",
+				"role": "text",
 				"type": "string",
 				"read":  true,
 				"write": false
@@ -120,110 +122,120 @@
 			"native": {}
 		},
 		{
-			"_id": "gamename",
+			"_id": "data.gamename",
 			"type": "state",
 			"common": {
 				"name": "Name of the currently playing game",
 				"type": "string",
+				"role": "text",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "accountstatus",
+			"_id": "data.accountstatus",
 			"type": "state",
 			"common": {
 				"name": "Status of the account",
 				"type": "string",
+				"role": "text",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "accountname",
+			"_id": "data.accountname",
 			"type": "state",
 			"common": {
-				"name": "Name of the account",
+				"name": "The player's display name",
 				"type": "string",
+				"role": "text",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "accountclanname",
+			"_id": "data.accountclanname",
 			"type": "state",
 			"common": {
 				"name": "Primary Clan name of the account",
 				"type": "string",
+				"role": "text",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "profileurl",
+			"_id": "data.profileurl",
 			"type": "state",
 			"common": {
 				"name": "Profile URL of the account",
 				"type": "string",
+				"role": "text",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "visibility",
+			"_id": "data.visibility",
 			"type": "state",
 			"common": {
 				"name": "This represents whether the profile is visible or not",
 				"type": "boolean",
+				"role": "text",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "profilestate",
+			"_id": "data.profilestate",
 			"type": "state",
 			"common": {
 				"name": "If set, indicates the user has a community profile configured",
 				"type": "boolean",
+				"role": "text",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "lastlogoff",
+			"_id": "data.lastlogoff",
 			"type": "state",
 			"common": {
 				"name": "The last time the user was online.",
 				"type": "string",
+				"role": "text",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "commentpermission",
+			"_id": "data.commentpermission",
 			"type": "state",
 			"common": {
 				"name": "If set, indicates the profile allows public comments",
 				"type": "string",
+				"role": "text",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "realname",
+			"_id": "data.realname",
 			"type": "state",
 			"common": {
 				"name": "The player's Real Name, if they have set it.",
 				"type": "string",
+				"role": "text",
 				"read":  true,
 				"write": false
 			},

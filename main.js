@@ -28,6 +28,7 @@ class Steam extends utils.Adapter
 		this.requestClient = axios.create();
 		this.SteamApiClient = null;
 		this.refreshStateTimeout = null;
+		this.lastStatus = null;
 	} //end constructor
 
 	async onReady()
@@ -62,7 +63,7 @@ class Steam extends utils.Adapter
 	async refreshGlobalState()
 	{
 		const SteamApiResponse = await this.SteamApiClient.get(`/ISteamUser/GetPlayerSummaries/v0002/?key=${this.config.steamapikey}&steamids=${this.config.userid}`);
-		this.log.debug(`SteamApiResponse ${SteamApiResponse.status}: ${JSON.stringify(SteamApiResponse.data)}`);
+		//this.log.debug(`SteamApiResponse ${SteamApiResponse.status}: ${JSON.stringify(SteamApiResponse.data)}`);
 
 		if (SteamApiResponse.status === 200) {
 			const steamInfo = SteamApiResponse.data.response.players[0];
@@ -71,16 +72,16 @@ class Steam extends utils.Adapter
 			const accountcreated=new Date(steamInfo.timecreated * 1000);
 			const lastlogoff=new Date(steamInfo.timecreated * 1000);
 
-			await this.setStateAsync('accountcreated', accountcreated.toDateString(), true);
-			await this.setStateAsync('accountname', steamInfo.personaname, true);
-			await this.setStateAsync('profileurl',steamInfo.profileurl, true);
-			await this.setStateAsync('visibility',!!steamInfo.communityvisibilitystate, true);
-			await this.setStateAsync('profilestate',!!steamInfo.profilestate, true);
-			await this.setStateAsync('lastlogoff',lastlogoff.toDateString(), true);
-			await this.setStateChangedAsync('realname',steamInfo.realname, true);
+			await this.setStateAsync('data.accountcreated', accountcreated.toDateString(), true);
+			await this.setStateAsync('data.accountname', steamInfo.personaname, true);
+			await this.setStateAsync('data.profileurl',steamInfo.profileurl, true);
+			await this.setStateAsync('data.visibility',!!steamInfo.communityvisibilitystate, true);
+			await this.setStateAsync('data.profilestate',!!steamInfo.profilestate, true);
+			await this.setStateAsync('data.lastlogoff',lastlogoff.toDateString(), true);
+			await this.setStateChangedAsync('data.realname',steamInfo.realname, true);
 			if (steamInfo.commentpermission)
 			{
-				await this.setStateAsync('commentpermission',steamInfo.commentpermission, true);
+				await this.setStateAsync('data.commentpermission',steamInfo.commentpermission, true);
 			}
 		}
 	}
@@ -112,23 +113,20 @@ class Steam extends utils.Adapter
 					status = this.getPersonaState(steamInfo.personastate);
 				}
 
-				let lastStatus='unrecognized';
-				const obj = await this.getStateAsync('accountstatus');
-				lastStatus=obj.val.toString();
-
-				if ((lastStatus) !== status)
+				if ((this.lastStatus) !== status)
 				{
 					this.log.info('Current status: ' + status);
-					await this.setStateAsync('accountstatus', status, true);
+					await this.setStateAsync('data.accountstatus', status, true);
+					this.lastStatus=status;
 					if (steamInfo.gameid)
 					{
-						await this.setStateAsync('gameid', steamInfo.gameid, true);
-						await this.setStateAsync('gamename', steamInfo.gameextrainfo, true);
+						await this.setStateAsync('data.gameid', steamInfo.gameid, true);
+						await this.setStateAsync('data.gamename', steamInfo.gameextrainfo, true);
 					}
 					else
 					{
-						await this.setStateAsync('gameid', null, true);
-						await this.setStateAsync('gamename', null, true);
+						await this.setStateAsync('data.gameid', null, true);
+						await this.setStateAsync('data.gamename', null, true);
 					}
 				}
 			}
@@ -161,8 +159,8 @@ class Steam extends utils.Adapter
 			},
 			nextRefreshSec * 1000);
 
-			this.log.debug('Current status: ' + status);
-			this.log.debug(`refreshStateTimeout: re-created refresh timeout: id ${this.refreshStateTimeout} refresh interval: ${this.config.interval}`);
+			//this.log.debug('Current status: ' + status);
+			//this.log.debug(`refreshStateTimeout: re-created refresh timeout: id ${this.refreshStateTimeout} refresh interval: ${this.config.interval}`);
 		}
 	}
 
