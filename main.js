@@ -43,7 +43,7 @@ class Steam extends utils.Adapter {
 		}
 
 		this.SteamApiClient = axios.create({
-			baseURL: 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' +this.config.steamapikey + '&steamids='+this.config.userid,
+			baseURL: 'http://api.steampowered.com',
 			timeout: 1000,
 			responseType: 'json',
 			responseEncoding: 'utf8',
@@ -55,7 +55,7 @@ class Steam extends utils.Adapter {
 		let accountcreated=new Date();
 		let personaname='';
 
-		const SteamApiResponse = await this.SteamApiClient.get('/');
+		const SteamApiResponse = await this.SteamApiClient.get(`/ISteamUser/GetPlayerSummaries/v0002/?key=${this.config.steamapikey}&steamids=${this.config.userid}`);
 		this.log.debug(`SteamApiResponse ${SteamApiResponse.status}: ${JSON.stringify(SteamApiResponse.data)}`);
 
 		if (SteamApiResponse.status === 200) {
@@ -75,9 +75,6 @@ class Steam extends utils.Adapter {
 
 	async refreshState() {
 		let nextRefreshSec = 15;
-		let gameid;
-		let gamename='';
-		let personastate =0;
 		let status = '';
 
 		if(this.config.interval)
@@ -87,46 +84,45 @@ class Steam extends utils.Adapter {
 
 		try {
 
-			const SteamApiResponse = await this.SteamApiClient.get('/');
+			const SteamApiResponse = await this.SteamApiClient.get(`/ISteamUser/GetPlayerSummaries/v0002/?key=${this.config.steamapikey}&steamids=${this.config.userid}`);
 
 			if (SteamApiResponse.status === 200) {
 				const steamInfo = SteamApiResponse.data;
-				gameid=steamInfo.response.players[0].gameid;
-				personastate= steamInfo.response.players[0].personastate;
-				gamename=steamInfo.response.players[0].gameextrainfo;
-			}
+				const gameid=steamInfo.response.players[0].gameid;
+				const personastate= steamInfo.response.players[0].personastate;
+				const gamename=steamInfo.response.players[0].gameextrainfo;
 
-			if (gameid)
-			{
-				status = 'playing';
-			}
-			else
-			{
-				status = this.getPersonaState(personastate);
-			}
-
-			let lastStatus='unrecognized';
-			try {
-				const obj = await this.getStateAsync('accountstatus');
-				// @ts-ignore
-				lastStatus=obj.val.toString();
-			} catch (err) {
-				lastStatus='unrecognized';
-			}
-
-			if ((lastStatus) !== status)
-			{
-				await this.log.info('Current status: ' + status);
-				await this.setStateAsync('accountstatus', status, true);
-				if (gameid)
+				if (steamInfo.response.players[0].gameid)
 				{
-					await this.setStateAsync('gameid', gameid, true);
-					await this.setStateAsync('gamename', gamename, true);
+					status = 'playing';
 				}
 				else
 				{
-					await this.setStateAsync('gameid', null, true);
-					await this.setStateAsync('gamename', null, true);
+					status = this.getPersonaState(personastate);
+				}
+
+				let lastStatus='unrecognized';
+				try {
+					const obj = await this.getStateAsync('accountstatus');
+					lastStatus=obj.val.toString();
+				} catch (err) {
+					lastStatus='unrecognized';
+				}
+
+				if ((lastStatus) !== status)
+				{
+					this.log.info('Current status: ' + status);
+					await this.setStateAsync('accountstatus', status, true);
+					if (gameid)
+					{
+						await this.setStateAsync('gameid', gameid, true);
+						await this.setStateAsync('gamename', gamename, true);
+					}
+					else
+					{
+						await this.setStateAsync('gameid', null, true);
+						await this.setStateAsync('gamename', null, true);
+					}
 				}
 			}
 
@@ -151,13 +147,13 @@ class Steam extends utils.Adapter {
 			}, nextRefreshSec * 1000);
 
 			await this.log.debug('Current status: ' + status);
-			this.log.debug(`refreshStateTimeout: re-created refresh timeout: id ${this.refreshStateTimeout}`);
+			this.log.debug('refreshStateTimeout: re-created refresh timeout: id ${this.refreshStateTimeout}');
 		}
 	}
 
 	onObjectChange(id, obj) {
 		if (obj) {
-			this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
+			this.log.info('object ${id} changed: ${JSON.stringify(obj)}');
 		}
 	}
 
@@ -178,7 +174,7 @@ class Steam extends utils.Adapter {
 		await this.setStateChangedAsync('info.connection', { val: status, ack: true });
 	}
 
-	async getPersonaState(personastate) {
+	getPersonaState(personastate) {
 		let status='unrecognized';
 		switch(personastate)
 		{
