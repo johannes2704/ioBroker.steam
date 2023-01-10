@@ -33,16 +33,19 @@ class Steam extends utils.Adapter {
 		//this.log.info(this.config.steamapikey);
 
 		let accountcreated='';
+		let personaname='';
 
 		await axios.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' +this.config.steamapikey + '&steamids='+this.config.userid)
 			.then((response) => {
-				accountcreated=response.data.response.players[0].timecreated;
+				accountcreated=response.data.response.players[0].timecreated.toString();
+				personaname=response.data.response.players[0].personaname;
 			})
 			.catch(error => {
 				this.log.error(error);
 			});
 
 		await this.setStateAsync('accountcreated', accountcreated, true);
+		await this.setStateAsync('personaname', personaname, true);
 
 		// main method
 		this.steamupdate();
@@ -83,7 +86,7 @@ class Steam extends utils.Adapter {
 
 		let lastStatus='unrecognized';
 		try {
-			const obj = await this.getStateAsync('Status');
+			const obj = await this.getStateAsync('accountstatus');
 			// @ts-ignore
 			lastStatus=obj.val.toString();
 		} catch (err) {

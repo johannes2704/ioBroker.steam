@@ -140,6 +140,17 @@
 				"write": false
 			},
 			"native": {}
+		},
+		{
+			"_id": "personaname",
+			"type": "state",
+			"common": {
+				"name": "Name of the person",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
 		}
 	]
 }
