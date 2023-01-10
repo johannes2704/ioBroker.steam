@@ -151,6 +151,17 @@
 				"write": false
 			},
 			"native": {}
+		},
+		{
+			"_id": "accountclanname",
+			"type": "state",
+			"common": {
+				"name": "Primary Clan name of the account",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
 		}
 	]
 }
