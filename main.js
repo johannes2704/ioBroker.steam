@@ -144,8 +144,8 @@ class Steam extends utils.Adapter
 			},
 			nextRefreshSec * 1000);
 
-			await this.log.debug('Current status: ' + status);
-			this.log.debug('refreshStateTimeout: re-created refresh timeout: id ${this.refreshStateTimeout}');
+			this.log.debug('Current status: ' + status);
+			this.log.debug(`refreshStateTimeout: re-created refresh timeout: id ${this.refreshStateTimeout} refresh interval: ${this.config.interval}`);
 		}
 	}
 

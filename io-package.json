@@ -162,6 +162,72 @@
 				"write": false
 			},
 			"native": {}
+		},
+		{
+			"_id": "profileurl",
+			"type": "state",
+			"common": {
+				"name": "Profile URL of the account",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "visibility",
+			"type": "state",
+			"common": {
+				"name": "This represents whether the profile is visible or not",
+				"type": "boolean",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "profilestate",
+			"type": "state",
+			"common": {
+				"name": "If set, indicates the user has a community profile configured",
+				"type": "boolean",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "lastlogoff",
+			"type": "state",
+			"common": {
+				"name": "The last time the user was online.",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "commentpermission",
+			"type": "state",
+			"common": {
+				"name": "If set, indicates the profile allows public comments",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "realname",
+			"type": "state",
+			"common": {
+				"name": "The player's Real Name, if they have set it.",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
 		}
 	]
 }
