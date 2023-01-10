@@ -74,11 +74,14 @@ class Steam extends utils.Adapter
 			await this.setStateAsync('accountcreated', accountcreated.toDateString(), true);
 			await this.setStateAsync('accountname', steamInfo.personaname, true);
 			await this.setStateAsync('profileurl',steamInfo.profileurl, true);
-			await this.setStateAsync('visibility',steamInfo.communityvisibilitystate, true);
-			await this.setStateAsync('profilstate',steamInfo.profilstate, true);
+			await this.setStateAsync('visibility',!!steamInfo.communityvisibilitystate, true);
+			await this.setStateAsync('profilestate',!!steamInfo.profilestate, true);
 			await this.setStateAsync('lastlogoff',lastlogoff.toDateString(), true);
-			await this.setStateAsync('commentpermission',steamInfo.commentpermission, true);
-			await this.setStateAsync('realname',steamInfo.realname, true);
+			await this.setStateChangedAsync('realname',steamInfo.realname, true);
+			if (steamInfo.commentpermission)
+			{
+				await this.setStateAsync('commentpermission',steamInfo.commentpermission, true);
+			}
 		}
 	}
 
