@@ -45,7 +45,7 @@ class Steam extends utils.Adapter {
 			});
 
 		await this.setStateAsync('accountcreated', accountcreated, true);
-		await this.setStateAsync('personaname', personaname, true);
+		await this.setStateAsync('accountname', personaname, true);
 
 		// main method
 		this.steamupdate();

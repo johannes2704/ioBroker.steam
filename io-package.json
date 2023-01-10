@@ -142,10 +142,10 @@
 			"native": {}
 		},
 		{
-			"_id": "personaname",
+			"_id": "accountname",
 			"type": "state",
 			"common": {
-				"name": "Name of the person",
+				"name": "Name of the account",
 				"type": "string",
 				"read":  true,
 				"write": false
