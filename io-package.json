@@ -83,5 +83,74 @@
 		"userid":""
 	},
 	"objects": [],
-	"instanceObjects": []
+	"instanceObjects": [
+	{
+		"_id": "info.connection",
+		"type": "state",
+		"common": {
+				"role": "indicator.connected",
+				"name": "If communication with circuit works",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+		},
+		"native": {}
+	},
+	{
+			"_id": "accountcreated",
+			"type": "state",
+			"common": {
+				"name": "Account created",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "gameid",
+			"type": "state",
+			"common": {
+				"name": "ID of the currently playing game",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "gamename",
+			"type": "state",
+			"common": {
+				"name": "Name of the currently playing game",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "accountstatus",
+			"type": "state",
+			"common": {
+				"name": "Status of the account",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "accountname",
+			"type": "state",
+			"common": {
+				"name": "Name of the account",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		}
+	]
 }

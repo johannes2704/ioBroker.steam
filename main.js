@@ -28,45 +28,24 @@ class Steam extends utils.Adapter {
 	async onReady()
 	{
 		// Initialize your adapter here
-		//this.setState("info.connection", false, true);
+		this.setState('info.connection', false, true);
 		//this.log.info("Intervall:" + this.config.interval);
 		//this.log.info(this.config.steamapikey);
 
-		await this.setObjectNotExistsAsync('Status', {
-			type: 'state',
-			common: {
-				name: 'Status',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false,
-			},
-			native: {},
-		});
+		let accountcreated='';
+		let personaname='';
 
-		await this.setObjectNotExistsAsync('GameID', {
-			type: 'state',
-			common: {
-				name: 'GameID',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false,
-			},
-			native: {},
-		});
+		await axios.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' +this.config.steamapikey + '&steamids='+this.config.userid)
+			.then((response) => {
+				accountcreated=response.data.response.players[0].timecreated.toString();
+				personaname=response.data.response.players[0].personaname;
+			})
+			.catch(error => {
+				this.log.error(error);
+			});
 
-		await this.setObjectNotExistsAsync('GameName', {
-			type: 'state',
-			common: {
-				name: 'GameName',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false,
-			},
-			native: {},
-		});
+		await this.setStateAsync('accountcreated', accountcreated, true);
+		await this.setStateAsync('accountname', personaname, true);
 
 		// main method
 		this.steamupdate();
@@ -107,7 +86,7 @@ class Steam extends utils.Adapter {
 
 		let lastStatus='unrecognized';
 		try {
-			const obj = await this.getStateAsync('Status');
+			const obj = await this.getStateAsync('accountstatus');
 			// @ts-ignore
 			lastStatus=obj.val.toString();
 		} catch (err) {
@@ -116,21 +95,21 @@ class Steam extends utils.Adapter {
 
 		if ((lastStatus) !== status)
 		{
-			await this.log.info('Steamstatus ist aktuell: ' + status);
-			await this.setStateAsync('Status', status, true);
+			await this.log.info('Current status: ' + status);
+			await this.setStateAsync('accountstatus', status, true);
 			if (gameid)
 			{
-				await this.setStateAsync('GameID', gameid, true);
-				await this.setStateAsync('GameName', gamename, true);
+				await this.setStateAsync('gameid', gameid, true);
+				await this.setStateAsync('gamename', gamename, true);
 			}
 			else
 			{
-				await this.setStateAsync('GameID', null, true);
-				await this.setStateAsync('GameName', null, true);
+				await this.setStateAsync('gameid', null, true);
+				await this.setStateAsync('gamename', null, true);
 			}
 		}
 
-		await this.log.info('Steamstatus ist aktuell: ' + status);
+		await this.log.debug('Current status: ' + status);
 
 		this.setTimeout(() => this.steamupdate(),1000*this.config.interval);
 	}
