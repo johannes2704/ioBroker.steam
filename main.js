@@ -28,45 +28,9 @@ class Steam extends utils.Adapter {
 	async onReady()
 	{
 		// Initialize your adapter here
-		//this.setState("info.connection", false, true);
+		this.setState('info.connection', false, true);
 		//this.log.info("Intervall:" + this.config.interval);
 		//this.log.info(this.config.steamapikey);
-
-		await this.setObjectNotExistsAsync('Status', {
-			type: 'state',
-			common: {
-				name: 'Status',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false,
-			},
-			native: {},
-		});
-
-		await this.setObjectNotExistsAsync('GameID', {
-			type: 'state',
-			common: {
-				name: 'GameID',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false,
-			},
-			native: {},
-		});
-
-		await this.setObjectNotExistsAsync('GameName', {
-			type: 'state',
-			common: {
-				name: 'GameName',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false,
-			},
-			native: {},
-		});
 
 		// main method
 		this.steamupdate();
@@ -117,7 +81,7 @@ class Steam extends utils.Adapter {
 		if ((lastStatus) !== status)
 		{
 			await this.log.info('Current status: ' + status);
-			await this.setStateAsync('Status', status, true);
+			await this.setStateAsync('accountstatus', status, true);
 			if (gameid)
 			{
 				await this.setStateAsync('GameID', gameid, true);

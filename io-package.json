@@ -98,14 +98,48 @@
 		"native": {}
 	},
 	{
-			"_id": "timecreated",
+			"_id": "accountcreated",
 			"type": "state",
 			"common": {
-				"name": "timecreated",
+				"name": "Account created",
 				"type": "string",
 				"read":  true,
 				"write": false
-			}
+			},
+			"native": {}
+		},
+		{
+			"_id": "gameid",
+			"type": "state",
+			"common": {
+				"name": "ID of the currently playing game",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "gamename",
+			"type": "state",
+			"common": {
+				"name": "Name of the currently playing game",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "accountstatus",
+			"type": "state",
+			"common": {
+				"name": "Status of the account",
+				"type": "string",
+				"read":  true,
+				"write": false
+			},
+			"native": {}
 		}
 	]
 }
