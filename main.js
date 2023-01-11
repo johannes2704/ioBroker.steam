@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use strict';
 
 /*
@@ -9,12 +10,14 @@
 const utils = require('@iobroker/adapter-core');
 const axios = require('axios').default;
 
-class Steam extends utils.Adapter {
+class Steam extends utils.Adapter
+{
 
 	/**
 	 * @param {Partial<utils.AdapterOptions>} [options={}]
 	 */
-	constructor(options) {
+	constructor(options)
+	{
 		super({
 			...options,
 			name: 'steam',
@@ -23,100 +26,147 @@ class Steam extends utils.Adapter {
 		this.on('unload', this.onUnload.bind(this));
 		this.on('objectChange', this.onObjectChange.bind(this));
 		this.requestClient = axios.create();
-	}
+		this.SteamApiClient = null;
+		this.refreshStateTimeout = null;
+		this.lastStatus = null;
+	} //end constructor
 
 	async onReady()
 	{
-		// Initialize your adapter here
-		this.setState('info.connection', false, true);
-		//this.log.info("Intervall:" + this.config.interval);
-		//this.log.info(this.config.steamapikey);
+		// check current configuration
+		if (!this.config.userid)
+		{
+			this.log.error('userid is empty - please check instance configuration of $(this.namespace)');
+			return;
+		}
+		if (!this.config.steamapikey)
+		{
+			this.log.error('steamapikey is empty - please check instance configuration of $(this.namespace');
+			return;
+		}
 
-		let accountcreated='';
-		let personaname='';
+		this.SteamApiClient = axios.create({
+			baseURL: 'http://api.steampowered.com',
+			timeout: 1000,
+			responseType: 'json',
+			responseEncoding: 'utf8',
+			validateStatus: (status) => {
+				return [200, 201, 401].includes(status);
+			},
+		});
 
-		await axios.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' +this.config.steamapikey + '&steamids='+this.config.userid)
-			.then((response) => {
-				accountcreated=response.data.response.players[0].timecreated.toString();
-				personaname=response.data.response.players[0].personaname;
-			})
-			.catch(error => {
-				this.log.error(error);
-			});
 
-		await this.setStateAsync('accountcreated', accountcreated, true);
-		await this.setStateAsync('accountname', personaname, true);
-
-		// main method
-		this.steamupdate();
+		this.refreshGlobalState();
+		this.refreshState();
 	}
 
-	async steamupdate() {
-		let gameid;
-		let gamename='';
-		let personastate =0;
-		let status = '';
+	async refreshGlobalState()
+	{
+		const SteamApiResponse = await this.SteamApiClient.get(`/ISteamUser/GetPlayerSummaries/v0002/?key=${this.config.steamapikey}&steamids=${this.config.userid}`);
+		//this.log.debug(`SteamApiResponse ${SteamApiResponse.status}: ${JSON.stringify(SteamApiResponse.data)}`);
 
-		await axios.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' +this.config.steamapikey + '&steamids='+this.config.userid)
-			.then((response) => {
-				gameid=response.data.response.players[0].gameid;
-				personastate= response.data.response.players[0].personastate;
-				gamename=response.data.response.players[0].gameextrainfo;
-			})
-			.catch(error => {
-				this.log.error(error);
-			});
+		if (SteamApiResponse.status === 200) {
+			const steamInfo = SteamApiResponse.data.response.players[0];
 
-		if (gameid)
-		{
-			status = 'playing';
-		}
-		else
-		{
-			switch(personastate)
+			//Convert from Unix Time to DateString
+			const accountcreated=new Date(steamInfo.timecreated * 1000);
+			const lastlogoff=new Date(steamInfo.timecreated * 1000);
+
+			await this.setStateAsync('data.accountcreated', accountcreated.toDateString(), true);
+			await this.setStateAsync('data.accountname', steamInfo.personaname, true);
+			await this.setStateAsync('data.profileurl',steamInfo.profileurl, true);
+			await this.setStateAsync('data.visibility',!!steamInfo.communityvisibilitystate, true);
+			await this.setStateAsync('data.profilestate',!!steamInfo.profilestate, true);
+			await this.setStateAsync('data.lastlogoff',lastlogoff.toDateString(), true);
+			await this.setStateChangedAsync('data.realname',steamInfo.realname, true);
+			if (steamInfo.commentpermission)
 			{
-				case 0:	status = 'offline'; break;
-				case 1: status = 'online'; break;
-				case 2: status = 'playing'; break;
-				case 3: status = 'away'; break;
-				case 4: status = 'snooze'; break;
-				default: status = 'unrecognized';
+				await this.setStateAsync('data.commentpermission',steamInfo.commentpermission, true);
 			}
 		}
+	}
 
-		let lastStatus='unrecognized';
-		try {
-			const obj = await this.getStateAsync('accountstatus');
-			// @ts-ignore
-			lastStatus=obj.val.toString();
-		} catch (err) {
-			lastStatus='unrecognized';
+	async refreshState()
+	{
+		let nextRefreshSec = this.config.interval;
+		let status = '';
+
+		if(this.config.interval)
+		{
+			nextRefreshSec=this.config.interval;
 		}
 
-		if ((lastStatus) !== status)
-		{
-			await this.log.info('Current status: ' + status);
-			await this.setStateAsync('accountstatus', status, true);
-			if (gameid)
+		try {
+
+			const SteamApiResponse = await this.SteamApiClient.get(`/ISteamUser/GetPlayerSummaries/v0002/?key=${this.config.steamapikey}&steamids=${this.config.userid}`);
+
+			if (SteamApiResponse.status === 200) {
+				const steamInfo = SteamApiResponse.data.response.players[0];
+				await this.setApiConnection(true);
+
+				if (steamInfo.gameid)
+				{
+					status = 'playing';
+				}
+				else
+				{
+					status = this.getPersonaState(steamInfo.personastate);
+				}
+
+				if ((this.lastStatus) !== status)
+				{
+					this.log.info('Current status: ' + status);
+					await this.setStateAsync('data.accountstatus', status, true);
+					this.lastStatus=status;
+					if (steamInfo.gameid)
+					{
+						await this.setStateAsync('data.gameid', steamInfo.gameid, true);
+						await this.setStateAsync('data.gamename', steamInfo.gameextrainfo, true);
+					}
+					else
+					{
+						await this.setStateAsync('data.gameid', null, true);
+						await this.setStateAsync('data.gamename', null, true);
+					}
+				}
+			}
+
+			if (this.refreshStateTimeout)
 			{
-				await this.setStateAsync('gameid', gameid, true);
-				await this.setStateAsync('gamename', gamename, true);
+				this.clearTimeout(this.refreshStateTimeout);
+			}
+		}
+		catch (err)
+		{
+			await this.setApiConnection(false);
+
+			if (err.name === 'AxiosError')
+			{
+				this.log.error(`Request to ${err?.config?.url} failed with code ${err?.status} (${err?.code}): ${err.message}`);
+				this.log.debug(`Complete error object: ${JSON.stringify(err)}`);
 			}
 			else
 			{
-				await this.setStateAsync('gameid', null, true);
-				await this.setStateAsync('gamename', null, true);
+				this.log.error(err);
 			}
 		}
+		finally
+		{
+			this.refreshStateTimeout = this.setTimeout(() =>
+			{
+				this.refreshStateTimeout = null;
+				this.refreshState();
+			},
+			nextRefreshSec * 1000);
 
-		await this.log.debug('Current status: ' + status);
-
-		this.setTimeout(() => this.steamupdate(),1000*this.config.interval);
+			//this.log.debug('Current status: ' + status);
+			//this.log.debug(`refreshStateTimeout: re-created refresh timeout: id ${this.refreshStateTimeout} refresh interval: ${this.config.interval}`);
+		}
 	}
 
 	onObjectChange(id, obj) {
 		if (obj) {
-			this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
+			this.log.info('object ${id} changed: ${JSON.stringify(obj)}');
 		}
 	}
 
@@ -130,6 +180,25 @@ class Steam extends utils.Adapter {
 		} catch (e) {
 			callback();
 		}
+	}
+
+	async setApiConnection(status) {
+		this.apiConnected = status;
+		await this.setStateChangedAsync('info.connection', { val: status, ack: true });
+	}
+
+	getPersonaState(personastate) {
+		let status='unrecognized';
+		switch(personastate)
+		{
+			case 0:	status = 'offline'; break;
+			case 1: status = 'online'; break;
+			case 2: status = 'playing'; break;
+			case 3: status = 'away'; break;
+			case 4: status = 'snooze'; break;
+			default: status = 'unrecognized';
+		}
+		return status;
 	}
 }
 
