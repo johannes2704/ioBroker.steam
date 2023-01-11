@@ -62,7 +62,7 @@
 		"readme": "https://github.com/johannes2704/ioBroker.steam/blob/main/README.md",
 		"loglevel": "info",
 		"mode": "daemon",
-		"type": "misc-Data",
+		"type": "misc-data",
 		"compact": true,
 		"connectionType": "cloud",
 		"DataSource": "poll",
