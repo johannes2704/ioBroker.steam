@@ -36,12 +36,12 @@ class Steam extends utils.Adapter
 		// check current configuration
 		if (!this.config.userid)
 		{
-			this.log.error('userid is empty - please check instance configuration of $(this.namespace)');
+			this.log.error(`userid is empty - please check instance configuration of $(this.namespace)`);
 			return;
 		}
 		if (!this.config.steamapikey)
 		{
-			this.log.error('steamapikey is empty - please check instance configuration of $(this.namespace');
+			this.log.error(`steamapikey is empty - please check instance configuration of $(this.namespace`);
 			return;
 		}
 
