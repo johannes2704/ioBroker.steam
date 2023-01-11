@@ -1,27 +1,31 @@
 {
-	"type": "panel",
+	"i18n": false,
+	"type": "tabs",
+	
 	"items": {
 		
-		"userid": {
-			"type": "text",
-			"label": "Steam User ID",
-			"newLine": true,
-			"md":2
-		},
+		"_options":	
+		{
+			"type": "panel",
+			"label": "Options",
+			
+			"items": {
+				"userid": {
+					"type": "text",
+					"label": "Steam User ID",
+					"newLine": true,
+					"md":6,
+					"help": "Can be retrieved here: https://www.steamidfinder.com/"
+				},
 
-		"steamapikey": {
-			"type": "text",
-			"label": "Steam API Key",
-			"newLine": true,
-			"md":6
-		},
-
-		"interval": {
-			"type": "number",
-			"label": "interval in seconds",
-			"newLine": true,
-			"default":"15",
-			"md":2
+				"steamapikey": {
+					"type": "text",
+					"label": "Steam API Key",
+					"newLine": true,
+					"md":6,
+					"help": "Can be retrieved here: https://steamcommunity.com/dev/apikey"
+				}
+			}
 		}
 	}
 }

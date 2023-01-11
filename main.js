@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use strict';
 
 /*
@@ -62,6 +61,7 @@ class Steam extends utils.Adapter
 
 	async refreshGlobalState()
 	{
+		// @ts-ignore
 		const SteamApiResponse = await this.SteamApiClient.get(`/ISteamUser/GetPlayerSummaries/v0002/?key=${this.config.steamapikey}&steamids=${this.config.userid}`);
 		//this.log.debug(`SteamApiResponse ${SteamApiResponse.status}: ${JSON.stringify(SteamApiResponse.data)}`);
 
@@ -81,7 +81,7 @@ class Steam extends utils.Adapter
 			}
 			else
 			{
-				await this.setStateAsync('Data.commentpermission',steamInfo.commentpermission, false);
+				await this.setStateAsync('Data.commentpermission',false, true);
 			}
 		}
 	}
@@ -98,6 +98,7 @@ class Steam extends utils.Adapter
 
 		try {
 
+			// @ts-ignore
 			const SteamApiResponse = await this.SteamApiClient.get(`/ISteamUser/GetPlayerSummaries/v0002/?key=${this.config.steamapikey}&steamids=${this.config.userid}`);
 
 			if (SteamApiResponse.status === 200) {
@@ -164,6 +165,7 @@ class Steam extends utils.Adapter
 		}
 	}
 
+	// @ts-ignore
 	onObjectChange(id, obj) {
 		if (obj) {
 			this.log.info('object ${id} changed: ${JSON.stringify(obj)}');
@@ -176,6 +178,8 @@ class Steam extends utils.Adapter
 	 */
 	onUnload(callback) {
 		try {
+			this.setApiConnection(false);
+			this.log.debug('cleaned everything up...');
 			callback();
 		} catch (e) {
 			callback();
