@@ -121,7 +121,7 @@ class Steam extends utils.Adapter
 					this.lastStatus=status;
 					if (steamInfo.gameid)
 					{
-						await this.setStateAsync('Data.Game_ID', steamInfo.gameid, true);
+						await this.setStateAsync('Data.Game_ID', parseInt(steamInfo.gameid), true);
 						await this.setStateAsync('Data.Game_Name', steamInfo.gameextrainfo, true);
 					}
 					else
