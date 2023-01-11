@@ -1,27 +1,51 @@
 {
-	"type": "panel",
+	"i18n": false,
+	"type": "tabs",
+	
 	"items": {
 		
-		"userid": {
-			"type": "text",
-			"label": "Steam User ID",
-			"newLine": true,
-			"md":2
-		},
+		"_options":	
+		{
+			"type": "panel",
+			"label": "Options",
+			
+			"items": {
+				"userid": {
+					"type": "text",
+					"label": "Steam User ID",
+					"newLine": true,
+					"md":2
+				},
 
-		"steamapikey": {
-			"type": "text",
-			"label": "Steam API Key",
-			"newLine": true,
-			"md":6
-		},
+				"steamapikey": {
+					"type": "text",
+					"label": "Steam API Key",
+					"newLine": true,
+					"md":6
+				},
 
-		"interval": {
-			"type": "number",
-			"label": "interval in seconds",
-			"newLine": true,
-			"default":"15",
-			"md":2
+				"interval": {
+					"type": "number",
+					"label": "interval in seconds",
+					"newLine": true,
+					"default":"15",
+					"md":2
+				}
+			}
+		},
+		"_help":	
+		{
+			"type": "panel",
+			"label": "Help",
+			"items":
+			{
+				"test": {
+					"type": "text",
+					"label": "Steam API Key",
+					"newLine": true,
+					"md":6
+				}	
+			}
 		}
 	}
 }
