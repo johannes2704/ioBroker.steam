@@ -70,7 +70,7 @@ class Steam extends utils.Adapter
 
 			//Convert from Unix Time to DateString
 			const accountcreated=new Date(steamInfo.timecreated * 1000);
-			const lastlogoff=new Date(steamInfo.timecreated * 1000);
+			const lastlogoff=new Date(steamInfo.lastlogoff * 1000);
 
 			await this.setStateAsync('data.accountcreated', accountcreated.toDateString(), true);
 			await this.setStateAsync('data.accountname', steamInfo.personaname, true);
