@@ -20,11 +20,13 @@ Retrieve various informations for a user from Steam.
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+* (johannes2704) Added additonal help for retrieving Steam User ID and Steam API Key
+* (johannes2704) Added additonal Properties and reworked the ioBroker object tree for the instance
+
+
 ### 0.0.1 (2023-01-11)
 * (johannes2704) Initial Release
-
-### **WORK IN PROGRESS**
-
 
 ## License
 MIT License
