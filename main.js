@@ -36,12 +36,12 @@ class Steam extends utils.Adapter
 		// check current configuration
 		if (!this.config.userid)
 		{
-			this.log.error('userid is empty - please check instance configuration of $(this.namespace)');
+			this.log.error(`userid is empty - please check instance configuration of $(this.namespace)`);
 			return;
 		}
 		if (!this.config.steamapikey)
 		{
-			this.log.error('steamapikey is empty - please check instance configuration of $(this.namespace');
+			this.log.error(`steamapikey is empty - please check instance configuration of $(this.namespace`);
 			return;
 		}
 
@@ -68,20 +68,20 @@ class Steam extends utils.Adapter
 		if (SteamApiResponse.status === 200) {
 			const steamInfo = SteamApiResponse.data.response.players[0];
 
-			//Convert from Unix Time to DateString
-			const accountcreated=new Date(steamInfo.timecreated * 1000);
-			const lastlogoff=new Date(steamInfo.timecreated * 1000);
-
-			await this.setStateAsync('data.accountcreated', accountcreated.toDateString(), true);
-			await this.setStateAsync('data.accountname', steamInfo.personaname, true);
-			await this.setStateAsync('data.profileurl',steamInfo.profileurl, true);
-			await this.setStateAsync('data.visibility',!!steamInfo.communityvisibilitystate, true);
-			await this.setStateAsync('data.profilestate',!!steamInfo.profilestate, true);
-			await this.setStateAsync('data.lastlogoff',lastlogoff.toDateString(), true);
-			await this.setStateChangedAsync('data.realname',steamInfo.realname, true);
+			await this.setStateAsync('Data.Account_created', steamInfo.timecreated, true);
+			await this.setStateAsync('Data.Account_Name', steamInfo.personaname, true);
+			await this.setStateAsync('Data.profileurl',steamInfo.profileurl, true);
+			await this.setStateAsync('Data.visibility',!!steamInfo.communityvisibilitystate, true);
+			await this.setStateAsync('Data.profilestate',!!steamInfo.profilestate, true);
+			await this.setStateAsync('Data.lastlogoff',steamInfo.lastlogoff, true);
+			await this.setStateChangedAsync('Data.realname',steamInfo.realname, true);
 			if (steamInfo.commentpermission)
 			{
-				await this.setStateAsync('data.commentpermission',steamInfo.commentpermission, true);
+				await this.setStateAsync('Data.commentpermission',steamInfo.commentpermission, true);
+			}
+			else
+			{
+				await this.setStateAsync('Data.commentpermission',steamInfo.commentpermission, false);
 			}
 		}
 	}
@@ -116,17 +116,17 @@ class Steam extends utils.Adapter
 				if ((this.lastStatus) !== status)
 				{
 					this.log.info('Current status: ' + status);
-					await this.setStateAsync('data.accountstatus', status, true);
+					await this.setStateAsync('Data.Account_Status', status, true);
 					this.lastStatus=status;
 					if (steamInfo.gameid)
 					{
-						await this.setStateAsync('data.gameid', steamInfo.gameid, true);
-						await this.setStateAsync('data.gamename', steamInfo.gameextrainfo, true);
+						await this.setStateAsync('Data.Game_ID', steamInfo.gameid, true);
+						await this.setStateAsync('Data.Game_Name', steamInfo.gameextrainfo, true);
 					}
 					else
 					{
-						await this.setStateAsync('data.gameid', null, true);
-						await this.setStateAsync('data.gamename', null, true);
+						await this.setStateAsync('Data.Game_ID', null, true);
+						await this.setStateAsync('Data.Game_Name', null, true);
 					}
 				}
 			}

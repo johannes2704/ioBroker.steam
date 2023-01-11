@@ -20,8 +20,11 @@ Retrieve various informations for a user from Steam.
 	### **WORK IN PROGRESS**
 -->
 
-### **WORK IN PROGRESS**
+### 0.0.1 (2023-01-11)
 * (johannes2704) Initial Release
+
+### **WORK IN PROGRESS**
+
 
 ## License
 MIT License
