@@ -48,7 +48,7 @@
 			"steam",
 			"games",
 			"play",
-			"data"
+			"Data"
 		],
 		"license": "MIT",
 		"platform": "Javascript/Node.js",
@@ -59,10 +59,10 @@
 		"readme": "https://github.com/johannes2704/ioBroker.steam/blob/main/README.md",
 		"loglevel": "info",
 		"mode": "daemon",
-		"type": "misc-data",
+		"type": "misc-Data",
 		"compact": true,
 		"connectionType": "cloud",
-		"dataSource": "poll",
+		"DataSource": "poll",
 		"adminUI": {
 			"config": "json"
 		},
@@ -98,31 +98,31 @@
 		"native": {}
 	},
 	{
-			"_id": "data.accountcreated",
+			"_id": "Data.Account_created",
 			"type": "state",
 			"common": {
 				"name": "Account created",
-				"type": "string",
-				"role": "text",
+				"type": "number",
+				"role": "date",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "data.gameid",
+			"_id": "Data.Game_ID",
 			"type": "state",
 			"common": {
 				"name": "ID of the currently playing game",
 				"role": "text",
-				"type": "string",
+				"type": "number",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "data.gamename",
+			"_id": "Data.Game_Name",
 			"type": "state",
 			"common": {
 				"name": "Name of the currently playing game",
@@ -134,7 +134,7 @@
 			"native": {}
 		},
 		{
-			"_id": "data.accountstatus",
+			"_id": "Data.Account_Status",
 			"type": "state",
 			"common": {
 				"name": "Status of the account",
@@ -146,7 +146,7 @@
 			"native": {}
 		},
 		{
-			"_id": "data.accountname",
+			"_id": "Data.Account_Name",
 			"type": "state",
 			"common": {
 				"name": "The player's display name",
@@ -158,7 +158,7 @@
 			"native": {}
 		},
 		{
-			"_id": "data.accountclanname",
+			"_id": "Data.Account_Clanname",
 			"type": "state",
 			"common": {
 				"name": "Primary Clan name of the account",
@@ -170,7 +170,7 @@
 			"native": {}
 		},
 		{
-			"_id": "data.profileurl",
+			"_id": "Data.profileurl",
 			"type": "state",
 			"common": {
 				"name": "Profile URL of the account",
@@ -182,55 +182,55 @@
 			"native": {}
 		},
 		{
-			"_id": "data.visibility",
+			"_id": "Data.visibility",
 			"type": "state",
 			"common": {
 				"name": "This represents whether the profile is visible or not",
 				"type": "boolean",
-				"role": "text",
+				"role": "indicator",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "data.profilestate",
+			"_id": "Data.profilestate",
 			"type": "state",
 			"common": {
 				"name": "If set, indicates the user has a community profile configured",
 				"type": "boolean",
-				"role": "text",
+				"role": "indicator",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "data.lastlogoff",
+			"_id": "Data.lastlogoff",
 			"type": "state",
 			"common": {
 				"name": "The last time the user was online.",
-				"type": "string",
-				"role": "text",
+				"type": "number",
+				"role": "date",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "data.commentpermission",
+			"_id": "Data.commentpermission",
 			"type": "state",
 			"common": {
 				"name": "If set, indicates the profile allows public comments",
-				"type": "string",
-				"role": "text",
+				"type": "boolean",
+				"role": "indicator",
 				"read":  true,
 				"write": false
 			},
 			"native": {}
 		},
 		{
-			"_id": "data.realname",
+			"_id": "Data.realname",
 			"type": "state",
 			"common": {
 				"name": "The player's Real Name, if they have set it.",
