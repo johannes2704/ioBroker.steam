@@ -14,37 +14,17 @@
 					"type": "text",
 					"label": "Steam User ID",
 					"newLine": true,
-					"md":2
+					"md":6,
+					"help": "Can be retrieved here: https://www.steamidfinder.com/"
 				},
 
 				"steamapikey": {
 					"type": "text",
 					"label": "Steam API Key",
 					"newLine": true,
-					"md":6
-				},
-
-				"interval": {
-					"type": "number",
-					"label": "interval in seconds",
-					"newLine": true,
-					"default":"15",
-					"md":2
+					"md":6,
+					"help": "Can be retrieved here: https://steamcommunity.com/dev/apikey"
 				}
-			}
-		},
-		"_help":	
-		{
-			"type": "panel",
-			"label": "Help",
-			"items":
-			{
-				"test": {
-					"type": "text",
-					"label": "Steam API Key",
-					"newLine": true,
-					"md":6
-				}	
 			}
 		}
 	}
