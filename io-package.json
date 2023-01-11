@@ -65,7 +65,7 @@
 		"type": "misc-data",
 		"compact": true,
 		"connectionType": "cloud",
-		"DataSource": "poll",
+		"dataSource": "poll",
 		"adminUI": {
 			"config": "json"
 		},
