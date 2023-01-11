@@ -81,7 +81,7 @@ class Steam extends utils.Adapter
 			}
 			else
 			{
-				await this.setStateAsync('Data.commentpermission',steamInfo.commentpermission, false);
+				await this.setStateAsync('Data.commentpermission',false, true);
 			}
 		}
 	}
